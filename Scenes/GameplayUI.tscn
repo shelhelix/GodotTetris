@@ -1,0 +1,60 @@
+[gd_scene load_steps=3 format=3 uid="uid://cip6c7otwmdpe"]
+
+[ext_resource type="Script" path="res://Scripts/CoreGameplay/Nodes/GameStarter.cs" id="1_62fr5"]
+[ext_resource type="Script" path="res://Scripts/CoreGameplay/Nodes/PlayGridView.cs" id="1_papc7"]
+
+[node name="Control" type="Control" node_paths=PackedStringArray("_playGridView")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_62fr5")
+_playGridView = NodePath("GridContainer")
+
+[node name="LeftUI" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 400.0
+grow_vertical = 2
+
+[node name="RightUI" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -400.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -445.0
+offset_top = -499.0
+offset_right = 500.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="." node_paths=PackedStringArray("_container")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 400.0
+offset_right = -400.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 10
+script = ExtResource("1_papc7")
+_container = NodePath(".")

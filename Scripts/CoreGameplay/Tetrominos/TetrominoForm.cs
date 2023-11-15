@@ -17,8 +17,8 @@ public class TetrominoForm {
 			return;
 		}
 		Grid = new bool[firstLineSize, lines.Length];
-		for (var y = 0; y < lines.Length; y++) {
-			for (var x = 0; x < lines[y].Length; x++) {
+		foreach ( var y in GD.Range(lines.Length) ) {
+			foreach ( var x in GD.Range(lines[y].Length) ) {
 				Grid[x, y] = lines[y][x] == 'X';
 			}
 		}

@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://du4ro0j7n2bkc"]
-
-[ext_resource type="Script" path="res://Scripts/CoreGameplay/Nodes/GameStarter.cs" id="1_0uho7"]
-
-[node name="GameplayScene" type="Node2D"]
-
-[node name="Starter" type="Node2D" parent="."]
-script = ExtResource("1_0uho7")

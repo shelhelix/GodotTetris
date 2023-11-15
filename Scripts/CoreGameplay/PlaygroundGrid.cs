@@ -15,7 +15,7 @@ public class PlaygroundGrid {
 
 	public bool IsCellOnGrid(Vector2I position) => (position.X >= 0) && (position.X < _grid.GetLength(0)) && (position.Y >= 0) && (position.Y < _grid.GetLength(1));
 
-	public bool IsCellEmpty(Vector2I position) => IsCellOnGrid(position) && _grid[position.X, position.Y];
+	public bool IsCellEmpty(Vector2I position) => IsCellOnGrid(position) && !_grid[position.X, position.Y];
 
 	public void SetCell(Vector2I position, bool value) {
 		if ( IsCellOnGrid(position) ) {
@@ -39,7 +39,7 @@ public class PlaygroundGrid {
 		for ( var x = 0; x < subGrid.GetLength(0); x++ ) {
 			for ( var y = 0; y < subGrid.GetLength(1); y++ ) {
 				var cellPos = leftTopCornerPos + new Vector2I(x, y);
-				if ( !IsCellOnGrid(cellPos) ) {
+				if ( !IsCellOnGrid(cellPos) || (subGrid[x,y] && !IsCellEmpty(cellPos)) ) {
 					return false;
 				}
 			}
@@ -55,7 +55,9 @@ public class PlaygroundGrid {
 		for ( var x = 0; x < subGrid.GetLength(0); x++ ) {
 			for ( var y = 0; y < subGrid.GetLength(1); y++ ) {
 				var cellPos = leftTopCornerPos + new Vector2I(x, y);
-				SetCell(cellPos, subGrid[x, y]);
+				if ( subGrid[x, y] ) {
+					SetCell(cellPos, subGrid[x, y]); 
+				}
 			}
 		}
 	}

@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://cip6c7otwmdpe"]
+
+[ext_resource type="Script" path="res://Scripts/CoreGameplay/Nodes/GameStarter.cs" id="1_bn7q6"]
+[ext_resource type="Script" path="res://Scripts/CoreGameplay/Nodes/PlayGridView.cs" id="2_s4cwi"]
+[ext_resource type="PackedScene" uid="uid://g0k2gxcc0qec" path="res://Prefabs/GridCell.tscn" id="3_x1mgh"]
+
+[node name="Control" type="Control" node_paths=PackedStringArray("_playGridView")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bn7q6")
+_playGridView = NodePath("Field")
+
+[node name="Field" type="Control" parent="." node_paths=PackedStringArray("_verticalContainer")]
+anchors_preset = 0
+offset_left = 400.0
+offset_right = 1520.0
+offset_bottom = 1080.0
+script = ExtResource("2_s4cwi")
+_tetriminoViewPrefab = ExtResource("3_x1mgh")
+_verticalContainer = NodePath("VBoxContainer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Field"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0

@@ -4,12 +4,11 @@ using GodotTetris.Scripts.Nodes;
 
 namespace GodotTetris.Scripts; 
 
-public partial class PlayGridView : GridContainer {
-	[Export]
-	PackedScene _tetriminoViewPrefab;
+public partial class PlayGridView : Control{
+	[Export] PackedScene _tetriminoViewPrefab;
 
-	[Export]
-	GridContainer _container;
+	[Export] VBoxContainer _verticalContainer;
+	
 
 	List<TetriminoView> _instances = new();
 	
@@ -17,14 +16,25 @@ public partial class PlayGridView : GridContainer {
 	
 	public void Init(GameManager gameManager) {
 		_gameManager = gameManager;
-		var size = _gameManager.PlayAreaSize;
-		for ( var x = 0; x < size.X; x++ ) {
-			for ( var y = 0; y < size.Y; y++ ) {
+		var size       = _gameManager.PlayAreaSize;
+		var cellSideSize = 1080 / size.Y;
+		for ( var y = 0; y < size.Y; y++ ) {
+			var horizontalContainer = new HBoxContainer();
+			horizontalContainer.CustomMinimumSize   = new Vector2(0, cellSideSize);
+			horizontalContainer.SizeFlagsHorizontal = SizeFlags.Fill;
+			horizontalContainer.AddThemeConstantOverride("separation", 0);
+			horizontalContainer.Alignment = BoxContainer.AlignmentMode.Center;
+			_verticalContainer.AddChild(horizontalContainer);
+			for ( var x = 0; x < size.X; x++ ) {
 				var instance = _tetriminoViewPrefab.Instantiate() as TetriminoView;
-				_container.AddChild(instance);
+				if ( instance == null ) {
+					GD.PrintErr("Something went wrong. Node is not supported");
+					return;
+				}
+				horizontalContainer.AddChild(instance);
 				_instances.Add(instance);
 				instance.SetState(false);
-				instance.Size              = new Vector2(1080/size.Y, 1080/size.Y);
+				instance.Size              = Vector2.One * cellSideSize;
 				instance.CustomMinimumSize = instance.Size;
 			}
 		}
@@ -39,7 +49,7 @@ public partial class PlayGridView : GridContainer {
 		for ( var x = 0; x < size.X; x++ ) {
 			for ( var y = 0; y < size.Y; y++ ) {
 				var position = new Vector2I(x, y);
-				_instances[x * size.Y + y].SetState(_gameManager.GetCellState(position));
+				_instances[y * size.X + x].SetState(_gameManager.GetCellState(position));
 			}
 		}
 	}

@@ -27,7 +27,7 @@ public class PlaygroundGrid {
 		for ( var x = 0; x < subGrid.GetLength(0); x++ ) {
 			for ( var y = 0; y < subGrid.GetLength(1); y++ ) {
 				var cellPos = leftTopCornerPos + new Vector2I(x, y);
-				if ( !IsCellOnGrid(cellPos) ) {
+				if ( subGrid[x, y] && !IsCellOnGrid(cellPos) ) {
 					return false;
 				}
 			}
@@ -39,7 +39,7 @@ public class PlaygroundGrid {
 		for ( var x = 0; x < subGrid.GetLength(0); x++ ) {
 			for ( var y = 0; y < subGrid.GetLength(1); y++ ) {
 				var cellPos = leftTopCornerPos + new Vector2I(x, y);
-				if ( !IsCellOnGrid(cellPos) || (subGrid[x,y] && !IsCellEmpty(cellPos)) ) {
+				if ( subGrid[x,y] && (!IsCellOnGrid(cellPos) || !IsCellEmpty(cellPos)) ) {
 					return false;
 				}
 			}

@@ -7,18 +7,34 @@ namespace GodotTetris.Scripts;
 
 public class GameManager {
 	FallingTetrominoContainer _currentTetromino;
+	PlaygroundGrid            _grid;
+	int                       _score;
+	bool                      _isGameEnded;
 	
-	PlaygroundGrid _grid;
-
 	public Vector2I PlayAreaSize => new(_grid.SizeX, _grid.SizeY);
-	
-	public event Action OnGameEnded;
 
-	bool _isGameEnded;
+	public int Score {
+		get => _score;
+		private set {
+			_score = value;
+			OnScoreChanged?.Invoke(_score);	
+		}
+	}
+
+	bool IsGameEnded {
+		get => _isGameEnded;
+		set {
+			_isGameEnded = value;
+			OnGameEnded?.Invoke(_isGameEnded);
+		}
+	}
+	
+	public event Action<bool> OnGameEnded;
+	public event Action<int>  OnScoreChanged;
 	
 	public GameManager() {
 		ResetGrid(Vector2I.Zero);
-		_isGameEnded = true;
+		IsGameEnded = true;
 	}
 
 	public void ResetGrid(Vector2I size) {
@@ -34,15 +50,14 @@ public class GameManager {
 	}
 
 	public void StartGame() {
-		if ( _isGameEnded ) {
-			ResetGrid(new Vector2I(_grid.SizeX, _grid.SizeY));
-		}
+		ResetGrid(new Vector2I(_grid.SizeX, _grid.SizeY));
+		Score = 0;
 		CreateNewFallTetrimino();
-		_isGameEnded = false;
+		IsGameEnded = false;
 	}
 
 	public void Fall() {
-		if ( _isGameEnded ) {
+		if ( IsGameEnded ) {
 			return;
 		}
 		if ( !TryMoveTetrimino(Vector2I.Down) ) {
@@ -52,6 +67,9 @@ public class GameManager {
 	
 
 	public bool TryRotateTetromino() {
+		if ( IsGameEnded ) {
+			return false;
+		}
 		if ( !IsFreePlaceOnGridForForm(_currentTetromino.LeftTopCellPosition, _currentTetromino.NextForm) ) {
 			return false;
 		} 
@@ -73,7 +91,27 @@ public class GameManager {
 				linesRemoved++;
 			}
 		}
-		GD.Print($"Lines combo: {linesRemoved}");
+		AddScore(linesRemoved);
+	}
+
+	void AddScore(int linesRemoved) {
+		switch ( linesRemoved ) {
+			case 0:
+				return;
+			case 1:
+				Score += 100;
+				break;
+			case 2:
+				Score += 300;
+				break;
+			case 3:
+				Score += 500;
+				break;
+			case 4:
+				Score += 800;
+				break;
+		}
+		// can't remove more than 4 lines at once
 	}
 
 	bool IsLineFilled(int yPos) {
@@ -97,8 +135,7 @@ public class GameManager {
 		var selectedTetromino = TetrominoFactory.CreateRandomTetromino();
 		_currentTetromino = new FallingTetrominoContainer(selectedTetromino, new Vector2I(_grid.SizeX / 2, 0));
 		if ( !IsFreePlaceOnGridForForm(_currentTetromino.LeftTopCellPosition, selectedTetromino.CurrentForm) ) {
-			_isGameEnded = true;
-			OnGameEnded?.Invoke();
+			IsGameEnded = true;
 		}
 	}
 
@@ -109,6 +146,9 @@ public class GameManager {
 	bool IsFreePlaceOnGridForForm(Vector2I topLeftCellPos, TetrominoForm form) => _grid.IsSubGridOnGrid(form.Grid, topLeftCellPos) && _grid.IsSubGridEmpty(form.Grid, topLeftCellPos);
 
 	public bool TryMoveTetrimino(Vector2I movement) {
+		if ( IsGameEnded ) {
+			return false;
+		}
 		var newLeftTopPos = _currentTetromino.LeftTopCellPosition + movement;
 		// check that can place tetrimino grid in new cells
 		if ( !IsFreePlaceOnGridForForm(newLeftTopPos, _currentTetromino.CurrentForm) ) {

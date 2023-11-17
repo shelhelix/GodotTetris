@@ -1,11 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://cip6c7otwmdpe"]
+[gd_scene load_steps=9 format=3 uid="uid://cip6c7otwmdpe"]
 
 [ext_resource type="Script" path="res://Scripts/CoreGameplay/Nodes/GameStarter.cs" id="1_bn7q6"]
 [ext_resource type="Script" path="res://Scripts/CoreGameplay/Nodes/PlayGridView.cs" id="2_s4cwi"]
 [ext_resource type="PackedScene" uid="uid://g0k2gxcc0qec" path="res://Prefabs/GridCell.tscn" id="3_x1mgh"]
 [ext_resource type="AudioStream" uid="uid://e8tbl23lev6l" path="res://Music/machiavellian-nightmare-electronic-dystopia-ai-robot-machine-139385.mp3" id="4_3aawt"]
+[ext_resource type="Script" path="res://Scripts/CoreGameplay/Nodes/ScoreView.cs" id="4_pbhpn"]
+[ext_resource type="Texture2D" uid="uid://pe8hxs8k4p1e" path="res://Textures/Command-Reset-256.png" id="6_e7yw4"]
+[ext_resource type="Script" path="res://Scripts/CoreGameplay/Nodes/ResetButton.cs" id="6_k3224"]
 
-[node name="Control" type="Control" node_paths=PackedStringArray("_playGridView")]
+[sub_resource type="LabelSettings" id="LabelSettings_52y2a"]
+font_size = 38
+outline_color = Color(0.501961, 0.0392157, 0.52549, 1)
+
+[node name="Control" type="Control" node_paths=PackedStringArray("_playGridView", "_scoreView", "_resetButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,6 +21,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_bn7q6")
 _playGridView = NodePath("Field")
+_scoreView = NodePath("Label")
+_resetButton = NodePath("Button")
 
 [node name="Field" type="Control" parent="." node_paths=PackedStringArray("_verticalContainer")]
 anchors_preset = 0
@@ -33,6 +42,45 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -958.0
+offset_top = -2.0
+offset_right = -548.0
+offset_bottom = 136.0
+grow_horizontal = 2
+text = "Score: 999999"
+label_settings = SubResource("LabelSettings_52y2a")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("4_pbhpn")
+
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_3aawt")
 autoplay = true
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 243.0
+offset_top = 182.0
+offset_right = 328.0
+offset_bottom = 262.0
+script = ExtResource("6_k3224")
+
+[node name="TextureRect" type="TextureRect" parent="Button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = -7.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_e7yw4")
+expand_mode = 1
+stretch_mode = 5

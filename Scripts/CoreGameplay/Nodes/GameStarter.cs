@@ -5,22 +5,25 @@ namespace GodotTetris.Scripts;
 public partial class GameStarter : Control {
 	const float UpdateInterval = 0.5f;
 	
-	[Export] public Vector2I     GridSize = new(10, 20);
-	[Export]        PlayGridView _playGridView;
+	[Export] Vector2I     _gridSize = new(10, 20);
+	[Export] PlayGridView _playGridView;
+	[Export] ScoreView    _scoreView;
+	[Export] ResetButton  _resetButton; 
+	
 
 	GameManager _gameManager;
 	
-	double _timeSinceLastUpdate = 0;
+	double _timeSinceLastUpdate;
 	
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
 		_gameManager = new GameManager();
-		_gameManager.ResetGrid(GridSize);
+		_gameManager.ResetGrid(_gridSize);
 		_gameManager.StartGame();
 		_playGridView.Init(_gameManager);
+		_scoreView.Init(_gameManager);
+		_resetButton.Init(_gameManager);
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta) {
 		_timeSinceLastUpdate += delta;
 		if ( _timeSinceLastUpdate > UpdateInterval ) {
